@@ -58,18 +58,21 @@ namespace AutotraderPageObjectModel
         {
             select = new SelectElement(element);
             select.SelectByIndex(index);
+            test.Log(LogStatus.Pass, String.Format("Element at index {0} has been selected", index));
         }
 
         public static void SelectByValue(IWebElement element, string value)
         {
             select = new SelectElement(element);
-            select.SelectByValue(value); ;
+            select.SelectByValue(value);
+            test.Log(LogStatus.Pass, String.Format("Element with value {0} has been selected", value));
         }
 
         public static void SelectByText(IWebElement element, string text)
         {
             select = new SelectElement(element);
             select.SelectByText(text);
+            test.Log(LogStatus.Pass, String.Format("Element with text {0} has been selected", text));
         }
 
 
@@ -179,11 +182,11 @@ namespace AutotraderPageObjectModel
 
                 screenShot.SaveAsFile(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
-                test.Log(LogStatus.Info, "Snapshot below: " + test.AddScreenCapture(fileName));
+                test.Log(LogStatus.Info, "The screenshot of the failed page is attached below: " + test.AddScreenCapture(fileName));
             }
             catch (Exception e)
             {
-                Console.WriteLine(String.Format("Screesnhot cannot be written because of {0} ", e));
+                Console.WriteLine(String.Format("Screenshot cannot be written because of {0} ", e));
             }
 
 
@@ -206,17 +209,21 @@ namespace AutotraderPageObjectModel
                     if (tryCount == 3)
                     {
                         SaveScreenshot();
+                        test.Log(LogStatus.Fail, String.Format("Element not found after {0} tries thus test with error {1}", tryCount, e));
                         throw e;
+
                     }
                 }
                     var second = new TimeSpan(0, 0, 2);
                     Thread.Sleep(second);
 
                     tryCount++;
+                    test.Log(LogStatus.Info, String.Format("Number of times element was sought was {0}", tryCount));
                 
             }
 
             Console.WriteLine(element.ToString() + " is now retrieved");
+            test.Log(LogStatus.Pass, "element sought has been found");
             return element;
 
         }
@@ -272,6 +279,7 @@ namespace AutotraderPageObjectModel
                     if (tryCount == 3)
                     {
                         SaveScreenshot();
+                        test.Log(LogStatus.Fail, String.Format("Element not found after {0} tries thus test with error {1}", tryCount, e));
                         throw e;
                     }
 
@@ -279,10 +287,12 @@ namespace AutotraderPageObjectModel
                     Thread.Sleep(second);
 
                     tryCount++;
+                    test.Log(LogStatus.Info, String.Format("Number of times element was sought was {0}", tryCount));
                 }
             }
 
             Console.WriteLine(element.ToString() + " is now retrieved");
+            test.Log(LogStatus.Pass, String.Format("The total number of element found is {0}" , element.Count()));
             return element;
 
         }
